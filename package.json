@@ -1,0 +1,12 @@
+{
+  "name": "practiceproject-in-epam-automated-course",
+  "version": "1.0.0",
+  "description": "Automated testing in JavaScript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Vera Zhukouskaya, verisola@gmail.com",
+  "license": "ISC"
+}
