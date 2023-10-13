@@ -10,7 +10,7 @@ describe('Schedule page', () => {
     }
 
     beforeEach(async () => {
-        await browser.url('https://ej2.syncfusion.com/showcase/angular/appointmentplanner/#/calendar');
+        await browser.url('#/calendar');
     });
 
     it('Check page title', async () => {
