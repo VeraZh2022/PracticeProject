@@ -187,8 +187,15 @@ exports.config = {
      * @param {Array.<String>} specs        List of spec file paths that are to be run
      * @param {object}         browser      instance of created browser/device session
      */
-    // before: function (capabilities, specs) {
-    // },
+    before: function (capabilities, specs) {
+        // adding new custom command that will wait for elements before clicking
+        return browser.addCommand('waitForElementAndClick', async function () {
+            await this.waitForDisplayed()
+            console.log('Element is displayed')
+            await this.click()
+            console.log('Element is clicked')
+        }, true)
+    },
     /**
      * Runs before a WebdriverIO command gets executed.
      * @param {string} commandName hook command name
