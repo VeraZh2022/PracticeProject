@@ -2,7 +2,6 @@
   "name": "wdio-v8",
   "version": "1.0.0",
   "description": "Automated testing in JavaScript",
-  "main": "index.js",
   "scripts": {
     "wdio": "wdio run src/config/wdio.conf.js"
   },

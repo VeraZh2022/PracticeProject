@@ -32,16 +32,16 @@ describe('Patient list page', () => {
     it('Adding new patient using waitUntil()', async () => {
         await browser.url('#/patients');
 
-        const lastRow = await $('//table[@class="e-table"]//tr[last()]/td[@class="e-rowcell"]');
+        const lastRow = await $('//table[@class="e-table"]//tr[last()]/td[@class="e-rowcell"]'); //?
         const lastRowIndex = await lastRow.getAttribute('index');
 
-        const btnAddNewPatient = await $('[class="e-control e-btn e-lib e-normal add-details e-primary"]');
-        const btnSaveNewPatient = await $('//ejs-dialog[contains(@class, "new-patient-dialog")]//div[@class="e-footer-content"]//button[text()="Save"]');
+        const btnAddNewPatient = await $('div.patient-operations button');  //[class="e-control e-btn e-lib e-normal add-details e-primary"]
+        const btnSaveNewPatient = await $('ejs-dialog//div/button[text()="Save"]'); //ejs-dialog[contains(@class, "new-patient-dialog")]//div[@class="e-footer-content"]//button[text()="Save"] 
 
         await btnAddNewPatient.click();
 
-        const newPatientCard = await $('ejs-dialog[cssclass="new-patient-dialog"]');
-        const patientName = await $('//ejs-dialog[contains(@class, "new-patient-dialog")]//div[@class="e-dlg-content"]//input[@name="Name"]');
+        const newPatientCard = await $('ejs-dialog.new-patient-dialog'); //ejs-dialog[cssclass="new-patient-dialog"]
+        const patientName = await $('ejs-textbox#Name div input#textbox_0'); // //ejs-dialog[contains(@class, "new-patient-dialog")]//div[@class="e-dlg-content"]//input[@name="Name"]
         const mobileNumber = await $('#PatientMobile');
         const email = await $('input[name="Email"]');
         const symptoms = await $('input[name="Symptoms"]');
@@ -60,7 +60,7 @@ describe('Patient list page', () => {
 
         let newRowIndex = -1
         await browser.waitUntil(async () => {
-            const newRow = await $('//table[@class="e-table"]//tr[last()]/td[@class="e-rowcell"]');
+            const newRow = await $('//table[@class="e-table"]//tr[last()]/td[@class="e-rowcell"]'); //?
             newRowIndex = await newRow.getAttribute('index');
             return newRowIndex > lastRowIndex;
         }, {
@@ -78,7 +78,7 @@ describe('Doctor list page', async () => {
         //open doctor page
         await browser.url('#/doctors');
         //click 'Select a Specialization' dropdown list
-        const selectSpecialization = await $('//div[@class="specialization-types"]//ejs-dropdownlist[@id="Specialization"]');
+        const selectSpecialization = await $('app-doctors div ejs-dropdownlist#Specialization'); ////div[@class="specialization-types"]//ejs-dropdownlist[@id="Specialization"]
         browser.action('pointer')
             .move({ duration: 0, origin: selectSpecialization, x: 0, y: 0 })
             .down({ button: 0 })
@@ -87,7 +87,7 @@ describe('Doctor list page', async () => {
             .perform();
         await browser.pause(1000);
         //'Select a Specialization' dropdown list is opened
-        const selectSpecList = await $('//div[@id="Specialization_popup"]');
+        const selectSpecList = await $('//div[@id="Specialization_popup"]'); //body.main-page div#Specialization_popup
         await selectSpecList.waitForDisplayed();
         //click down through the list to "cardiology"  
         browser.action('key')
@@ -101,16 +101,16 @@ describe('Doctor list page', async () => {
             .perform();
         await browser.pause(1000);
         //"cardiology" is selected
-        await $('//div[@class="specialist-value department-value"]/span[@class="cardiology"]').waitForDisplayed();
+        await $('span.e-input-value div span.name').waitForDisplayed(); // //div[@class="specialist-value department-value"]/span[@class="cardiology"]
         //click on doctor card
         await $('div#Specialist_7').waitForElementAndClick();
         //doctor details page is opened
-        await $('//app-doctor-details/div[@class="doctor-details-container"]').waitForDisplayed();
+        await $('div.doctor-details-container').waitForDisplayed(); // //app-doctor-details/div[@class="doctor-details-container"]
         await browser.pause(1000);
         //click on 'Break hours' button
         await $('div.add-container').click();
         //'Break hours' window is opened
-        await $('ejs-dialog[class$="e-popup-open"]').waitForDisplayed();
+        await $('ejs-dialog.e-popup-open').waitForDisplayed(); //ejs-dialog[class$="e-popup-open"]
         await browser.pause(1000);
         //type in Sunday start time '3:30 PM' in combobox
         const boxStartTime = await $('#sunday_start_input');
@@ -141,10 +141,10 @@ describe('Doctor list page', async () => {
         ]);
         await browser.pause(1000);
         //click Save button 
-        const btnSaveBreakHours = await $('//ejs-dialog[contains(@class, "break-hour-dialog")]//div[@class="e-footer-content"]//button[text()="Save"]');
+        const btnSaveBreakHours = await $('//ejs-dialog[@header]//div/button[text()="Save"]'); // //ejs-dialog[contains(@class, "break-hour-dialog")]//div[@class="e-footer-content"]//button[text()="Save"]
         await btnSaveBreakHours.click();
         //'Break hours' window is closed
-        await expect($('ejs-dialog[class$="e-popup-open"]')).not.toBeDisplayed();  
+        await expect($('ejs-dialog.e-popup-open')).not.toBeDisplayed();  
         await browser.pause(1000); 
         //doctor details page is opened with changed data 
         await expect($('//div[contains(@class, "day-break-hours")]')).toHaveText('3:30 PM - 4:30 PM');
