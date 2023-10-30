@@ -18,7 +18,7 @@ describe('Dashboard page', () => {
 
         //actions for page reloading
         await $('a[href="#/calendar"]').click();
-        await $('div[class="sidebar-item dashboard"]').waitForElementAndClick();
+        await $('.sidebar-item.dashboard').waitForElementAndClick(); // div[class="sidebar-item dashboard"]
 
         const savedData = await browser.execute(() => {
             return JSON.parse(localStorage.getItem('bookAppointment'));
@@ -32,9 +32,7 @@ describe('Dashboard page', () => {
         });
 
         //data existing validation
-        const newData = await browser.execute(() => {
-            return localStorage.getItem('Time');
-        });
+        const newData = await browser.execute(() => localStorage.getItem('Time'));
         await expect(newData).toEqual('10:30 AM, 01:00 PM, 04:00 PM, 07:00 PM');
 
         const deletedData = await browser.execute(() => {

@@ -12,7 +12,7 @@ describe('Schedule page', () => {
         const userTypeTextWeight = 'bold';
         const userTypeFieldBackground = 'red';
 
-        await browser.pause(1000);
+        //await browser.pause(1000);
         await browser.execute((userType, color, fontWeight, backgroundColor) => {
             const userTypeSelector = document.querySelector('p.user-type')
             userTypeSelector.textContent = userType
@@ -20,7 +20,7 @@ describe('Schedule page', () => {
             userTypeSelector.style.fontWeight = fontWeight
             userTypeSelector.style.backgroundColor = backgroundColor
         }, newUserType, userTypeTextColor, userTypeTextWeight, userTypeFieldBackground);
-        await browser.pause(2000);
+        //await browser.pause(2000);
         // Validation
         await expect($('p.user-type')).toHaveText(newUserType);
     });
@@ -32,7 +32,7 @@ describe('Patient list page', () => {
     it('Adding new patient using waitUntil()', async () => {
         await browser.url('#/patients');
 
-        const lastRow = await $('//table[@class="e-table"]//tr[last()]/td[@class="e-rowcell"]'); //?
+        const lastRow = await $('table.e-table tr.e-row:last-child td.e-rowcell'); // //table[@class="e-table"]//tr[last()]/td[@class="e-rowcell"]
         const lastRowIndex = await lastRow.getAttribute('index');
 
         const btnAddNewPatient = await $('div.patient-operations button');  //[class="e-control e-btn e-lib e-normal add-details e-primary"]
@@ -60,7 +60,7 @@ describe('Patient list page', () => {
 
         let newRowIndex = -1
         await browser.waitUntil(async () => {
-            const newRow = await $('//table[@class="e-table"]//tr[last()]/td[@class="e-rowcell"]'); //?
+            const newRow = await $('table.e-table tr.e-row:last-child td.e-rowcell'); // //table[@class="e-table"]//tr[last()]/td[@class="e-rowcell"]
             newRowIndex = await newRow.getAttribute('index');
             return newRowIndex > lastRowIndex;
         }, {
@@ -68,7 +68,7 @@ describe('Patient list page', () => {
             timeoutMsg: 'New row is not added'
         });
         // Validation
-        expect(newRowIndex).toHaveValue(lastRowIndex + 1);
+        expect(newRowIndex).toHaveValue(lastRowIndex + 1); // or just  expect(newRowIndex).toBePresent();
     });
 });
 
@@ -79,18 +79,18 @@ describe('Doctor list page', async () => {
         await browser.url('#/doctors');
         //click 'Select a Specialization' dropdown list
         const selectSpecialization = await $('app-doctors div ejs-dropdownlist#Specialization'); ////div[@class="specialization-types"]//ejs-dropdownlist[@id="Specialization"]
-        browser.action('pointer')
+        await browser.action('pointer')
             .move({ duration: 0, origin: selectSpecialization, x: 0, y: 0 })
             .down({ button: 0 })
             .pause(20)
             .up({ button: 0 })
             .perform();
-        await browser.pause(1000);
+        //await browser.pause(1000);
         //'Select a Specialization' dropdown list is opened
         const selectSpecList = await $('//div[@id="Specialization_popup"]'); //body.main-page div#Specialization_popup
         await selectSpecList.waitForDisplayed();
         //click down through the list to "cardiology"  
-        browser.action('key')
+        await browser.action('key')
             .down(Key.ArrowDown)
             .down(Key.ArrowDown)
             .down(Key.ArrowDown)
@@ -99,55 +99,68 @@ describe('Doctor list page', async () => {
             .down(Key.ArrowDown)
             .down(Key.Enter)
             .perform();
-        await browser.pause(1000);
+        //await browser.pause(1000);
         //"cardiology" is selected
         await $('span.e-input-value div span.name').waitForDisplayed(); // //div[@class="specialist-value department-value"]/span[@class="cardiology"]
         //click on doctor card
         await $('div#Specialist_7').waitForElementAndClick();
         //doctor details page is opened
         await $('div.doctor-details-container').waitForDisplayed(); // //app-doctor-details/div[@class="doctor-details-container"]
-        await browser.pause(1000);
+        //await browser.pause(1000);
         //click on 'Break hours' button
         await $('div.add-container').click();
         //'Break hours' window is opened
         await $('ejs-dialog.e-popup-open').waitForDisplayed(); //ejs-dialog[class$="e-popup-open"]
-        await browser.pause(1000);
+        //await browser.pause(1000);
         //type in Sunday start time '3:30 PM' in combobox
         const boxStartTime = await $('#sunday_start_input');
         const boxEndTime = await $('#sunday_end_input');
         await browser.actions([
-            browser.action('pointer')
+            await browser.action('pointer')
                 .move({ duration: 0, origin: boxStartTime, x: 0, y: 0 })
                 .down({ button: 0 })
                 .pause(20)
                 .up({ button: 0 }),
-            browser.action('key')
+            await browser.action('key')
                 .down(Key.Delete)
                 .pause(100)
-                .down('3').down(':').down('3').down('0').down(' ').down('P').down('M').up('M')
+                .down('3')
+                .down(':')
+                .down('3')
+                .down('0')
+                .down(' ')
+                .down('P')
+                .down('M')
+                .up('M')
         ]);
-        await browser.pause(1000);    
+        //await browser.pause(1000);    
         //type in Sunday end time '4:30 PM' in combobox  
         await browser.actions([  
-            browser.action('pointer')
+            await browser.action('pointer')
                 .move({ duration: 0, origin: boxEndTime, x: 0, y: 0 })
                 .down({ button: 0 })
                 .pause(20)
                 .up({ button: 0 }),
-            browser.action('key')
+            await browser.action('key')
                 .down(Key.Delete)
                 .pause(100)
-                .down('4').down(':').down('3').down('0').down(' ').down('P').down('M')    
+                .down('4')
+                .down(':')
+                .down('3')
+                .down('0')
+                .down(' ')
+                .down('P')
+                .down('M')    
         ]);
-        await browser.pause(1000);
+        //await browser.pause(1000);
         //click Save button 
         const btnSaveBreakHours = await $('//ejs-dialog[@header]//div/button[text()="Save"]'); // //ejs-dialog[contains(@class, "break-hour-dialog")]//div[@class="e-footer-content"]//button[text()="Save"]
         await btnSaveBreakHours.click();
         //'Break hours' window is closed
         await expect($('ejs-dialog.e-popup-open')).not.toBeDisplayed();  
-        await browser.pause(1000); 
+        //await browser.pause(1000); 
         //doctor details page is opened with changed data 
-        await expect($('//div[contains(@class, "day-break-hours")]')).toHaveText('3:30 PM - 4:30 PM');
+        await expect($('div.day-break-hours')).toHaveText('3:30 PM - 4:30 PM'); // //div[contains(@class, "day-break-hours")]
 
     });
 });
